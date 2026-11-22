@@ -174,36 +174,119 @@ audio {
 </main>
 
 <script>
-const songs = [
-  { title: "Track 01", src: "" },
-  { title: "Track 02", src: "" },
-  { title: "Track 03", src: "" }
-];
+const SUPABASE_FUNCTION_URL =
+  "https://wjygtnpvfplhwewytiuw.supabase.co/functions/v1/play-music";
+
+const PUBLISHABLE_KEY =
+  "sb_publishable_myeFMi72DFGcxKyUEeEY1g_Ro2GsPon";
 
 const audio = document.getElementById("audio");
 const list = document.getElementById("tracks");
 
-songs.forEach((song, index) => {
-  const item = document.createElement("div");
-  item.className = "track";
+// NFCのURLについている合言葉を取得
+const token = new URLSearchParams(window.location.search).get("key");
 
-  item.innerHTML = `
-    <span class="number">${String(index + 1).padStart(2, "0")}</span>
-    <span>${song.title}</span>
-  `;
+// Supabaseの関数を呼び出す
+async function callFunction(body) {
+  const response = await fetch(SUPABASE_FUNCTION_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": PUBLISHABLE_KEY
+    },
+    body: JSON.stringify({
+      ...body,
+      token: token
+    })
+  });
 
-  item.addEventListener("click", () => {
-    if (!song.src) {
-      alert("音源はまだ設定されていません。");
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error || "通信に失敗しました");
+  }
+
+  return result;
+}
+
+// 曲を再生
+async function playTrack(path, item) {
+  try {
+    list.querySelectorAll(".track").forEach(track => {
+      track.classList.remove("playing");
+    });
+
+    item.classList.add("playing");
+    item.querySelector(".track-title").textContent = "読み込み中...";
+
+    const result = await callFunction({
+      action: "play",
+      path: path
+    });
+
+    audio.src = result.url;
+    await audio.play();
+
+    item.querySelector(".track-title").textContent =
+      path.replace(/\.mp3$/i, "");
+  } catch (error) {
+    alert("再生できませんでした: " + error.message);
+    item.classList.remove("playing");
+  }
+}
+
+// 曲一覧を読み込む
+async function loadTracks() {
+  if (!token) {
+    list.textContent = "アクセス用URLを確認してください。";
+    return;
+  }
+
+  list.textContent = "曲を読み込み中...";
+
+  try {
+    const result = await callFunction({
+      action: "list"
+    });
+
+    list.replaceChildren();
+
+    if (!result.tracks || result.tracks.length === 0) {
+      list.textContent = "まだ曲が登録されていません。";
       return;
     }
 
-    audio.src = song.src;
-    audio.play();
-  });
+    result.tracks.forEach((song, index) => {
+      const item = document.createElement("div");
+      item.className = "track";
 
-  list.appendChild(item);
+      const number = document.createElement("span");
+      number.className = "number";
+      number.textContent = String(index + 1).padStart(2, "0");
+
+      const title = document.createElement("span");
+      title.className = "track-title";
+      title.textContent = song.title;
+
+      item.appendChild(number);
+      item.appendChild(title);
+
+      item.addEventListener("click", () => {
+        playTrack(song.path, item);
+      });
+
+      list.appendChild(item);
+    });
+
+  } catch (error) {
+    list.textContent = "曲の読み込みに失敗しました。";
+    console.error(error);
+  }
+}
+audio.addEventListener("error", () => {
+  console.error("音声の読み込みに失敗しました");
 });
+loadTracks();
 </script>
 
 </body>
