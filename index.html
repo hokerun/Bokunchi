@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bokunchi</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 25px 18px;
+  min-height: 100vh;
+  background: #d8d0bd;
+  color: #29271f;
+  font-family: "Hiragino Maru Gothic ProN",
+    "Yu Gothic", sans-serif;
+}
+
+.player {
+  max-width: 390px;
+  margin: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  letter-spacing: 2px;
+  border-bottom: 1px solid #77705f;
+  padding-bottom: 12px;
+}
+
+.cover {
+  margin: 30px auto 22px;
+  width: 100%;
+  aspect-ratio: 1;
+  background: #b7a58a;
+  border: 8px solid #e9e2d3;
+  box-shadow: 3px 4px 0 #827967;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transform: rotate(-1deg);
+}
+
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px dashed #71644f;
+}
+
+.cover-title {
+  font-family: cursive;
+  font-size: clamp(38px, 12vw, 55px);
+  font-weight: bold;
+  transform: rotate(-6deg);
+  color: #39382d;
+}
+
+.cover-small {
+  position: absolute;
+  bottom: 27px;
+  right: 25px;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.album-info {
+  padding: 8px 3px 20px;
+}
+
+.album-title {
+  font-family: cursive;
+  font-size: 30px;
+  font-weight: bold;
+  transform: rotate(-2deg);
+  margin-bottom: 7px;
+}
+
+.artist {
+  font-size: 12px;
+  color: #6f695c;
+}
+
+.player-box {
+  background: #bdb6a5;
+  border: 2px solid #777262;
+  border-radius: 9px;
+  padding: 17px;
+  box-shadow: inset 0 0 8px #8b8575;
+}
+
+.player-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+audio {
+  width: 100%;
+  height: 38px;
+}
+
+.track-heading {
+  font-family: cursive;
+  font-size: 19px;
+  margin: 30px 0 10px;
+  transform: rotate(-2deg);
+}
+
+.track {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  padding: 14px 5px;
+  border-top: 1px dashed #8c8576;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.track:active {
+  background: #c7beaa;
+}
+
+.number {
+  color: #827967;
+  font-size: 11px;
+}
+
+.note {
+  text-align: center;
+  font-family: cursive;
+  font-size: 12px;
+  margin-top: 35px;
+  color: #77705f;
+}
+</style>
+</head>
+
+<body>
+<main class="player">
+
+  <div class="header">
+    <span>BOKUNCHI RECORDS</span>
+    <span>NO.001</span>
+  </div>
+
+  <div class="cover">
+    <div class="cover-title">Bokunchi</div>
+    <div class="cover-small">MUSIC COLLECTION</div>
+  </div>
+
+  <section class="album-info">
+    <div class="album-title">Bokunchi.</div>
+    <div class="artist">my little music archive</div>
+  </section>
+
+  <div class="player-box">
+    <div class="player-label">NOW PLAYING ...</div>
+    <audio id="audio" controls></audio>
+  </div>
+
+  <div class="track-heading">Track list ♪</div>
+  <div id="tracks"></div>
+
+  <div class="note">
+    made with music & memories.
+  </div>
+
+</main>
+
+<script>
+const songs = [
+  { title: "Track 01", src: "" },
+  { title: "Track 02", src: "" },
+  { title: "Track 03", src: "" }
+];
+
+const audio = document.getElementById("audio");
+const list = document.getElementById("tracks");
+
+songs.forEach((song, index) => {
+  const item = document.createElement("div");
+  item.className = "track";
+
+  item.innerHTML = `
+    <span class="number">${String(index + 1).padStart(2, "0")}</span>
+    <span>${song.title}</span>
+  `;
+
+  item.addEventListener("click", () => {
+    if (!song.src) {
+      alert("音源はまだ設定されていません。");
+      return;
+    }
+
+    audio.src = song.src;
+    audio.play();
+  });
+
+  list.appendChild(item);
+});
+</script>
+
+</body>
+</html>
