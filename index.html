@@ -12,12 +12,18 @@ body {
   margin: 0;
   padding: 25px 18px;
   min-height: 100vh;
-  background: #d8d0bd;
-  color: #29271f;
+  background: linear-gradient(
+    180deg,
+    #9bcdf0 0%,
+    #6da9dc 25%,
+    #397bb9 50%,
+    #194c83 75%,
+    #091e42 100%
+  );
+  color: #f4f5fa;
   font-family: "Hiragino Maru Gothic ProN",
     "Yu Gothic", sans-serif;
 }
-
 .player {
   max-width: 390px;
   margin: auto;
@@ -36,37 +42,16 @@ body {
   margin: 30px auto 22px;
   width: 100%;
   aspect-ratio: 1;
-  background: #b7a58a;
-  border: 8px solid #e9e2d3;
-  box-shadow: 3px 4px 0 #827967;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
   position: relative;
-  transform: rotate(-1deg);
+  transform: none;
 }
 
-.cover::before {
-  content: "";
-  position: absolute;
-  inset: 12px;
-  border: 1px dashed #71644f;
-}
-
-.cover-title {
-  font-family: cursive;
-  font-size: clamp(38px, 12vw, 55px);
-  font-weight: bold;
-  transform: rotate(-6deg);
-  color: #39382d;
-}
-
-.cover-small {
-  position: absolute;
-  bottom: 27px;
-  right: 25px;
-  font-size: 10px;
-  letter-spacing: 2px;
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .album-info {
@@ -83,15 +68,16 @@ body {
 
 .artist {
   font-size: 12px;
-  color: #6f695c;
+  color: #c5d9ef;
 }
 
 .player-box {
-  background: #bdb6a5;
-  border: 2px solid #777262;
-  border-radius: 9px;
+  background: rgba(8, 28, 62, 0.55);
+  border: 1px solid rgba(190, 220, 255, 0.35);
+  border-radius: 12px;
   padding: 17px;
-  box-shadow: inset 0 0 8px #8b8575;
+  box-shadow: 0 4px 20px rgba(0, 10, 35, 0.2);
+  color: #f4f5fa;
 }
 
 .player-label {
@@ -110,6 +96,7 @@ audio {
   font-size: 19px;
   margin: 30px 0 10px;
   transform: rotate(-2deg);
+  color: #e4efff;
 }
 
 .track {
@@ -117,13 +104,14 @@ audio {
   gap: 15px;
   align-items: center;
   padding: 14px 5px;
-  border-top: 1px dashed #8c8576;
+  border-top: 1px solid rgba(190, 220, 255, 0.25);
   cursor: pointer;
   font-size: 13px;
+  color: #f4f5fa;
 }
 
 .track:active {
-  background: #c7beaa;
+  background: rgba(170, 210, 255, 0.15);
 }
 
 .number {
@@ -149,10 +137,9 @@ audio {
     <span>NO.001</span>
   </div>
 
-  <div class="cover">
-    <div class="cover-title">Bokunchi</div>
-    <div class="cover-small">MUSIC COLLECTION</div>
-  </div>
+<div class="cover">
+  <img src="cover.PNG" alt="Bokunchi">
+</div>
 
   <section class="album-info">
     <div class="album-title">Bokunchi.</div>
